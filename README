@@ -3,5 +3,13 @@ scraped-webapp-starter
 work in progress.....
 
 setup:
+
+npm install
+
 removed config/config.js with .gitignore so recreate this file with:
 	exports.dbconn = "mysql://user:pass@host/database";
+
+
+
+scripts:
+scripts/makepwd.js will make salt+hash and output to base64 to store in mysql db until adding into webapp
