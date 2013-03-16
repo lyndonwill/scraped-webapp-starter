@@ -1,1 +1,7 @@
-hi
+scraped-webapp-starter
+
+work in progress.....
+
+setup:
+removed config/config.js with .gitignore so recreate this file with:
+	exports.dbconn = "mysql://user:pass@host/database";
