@@ -2,10 +2,18 @@
 
 /* Controllers */
 
-function AppCtrl($scope, socket) {
-  socket.on('send:name', function (data) {
-    $scope.name = data.name;
-  });
+function AppCtrl($scope, socket, $http) {
+	$scope.showLogout = false;
+	$http.get('/api/getuser').success(function(data) {
+		if(data.name.length>1) {$scope.showLogout = true;}
+		$scope.name = data.name;
+	});
+
+	$scope.logout = function() {
+		$http.post('/logout').success(function(data) {
+			window.location.href='/';
+		});
+	};
 };
 
 function HomeCtrl() {

@@ -1,9 +1,17 @@
- <form class="form-signin" method="post" action="/login">
- <h2 class="form-signin-heading">Please sign in</h2>
- <input type="text" class="input-block-level" placeholder="username">
- <input type="password" class="input-block-level" placeholder="Password">
- <label class="checkbox">
- <input type="checkbox" value="remember-me"> Remember me
- </label>
- <button class="btn btn-large btn-primary" type="submit">Login in</button>
- </form>
+<h1>Login</h1>
+<form method="post" action="/login">
+  <p>
+    <label>Username:</label>
+    <input type="text" name="username" autofocus>
+  </p>
+  <p>
+    <label>Password:</label>
+    <input type="password" name="password">
+  </p>
+  <p>
+  <input type="checkbox" value="remember-me"> Remember me
+  </p>
+  <p>
+    <input type="submit" value="Login">
+  </p>
+</form>

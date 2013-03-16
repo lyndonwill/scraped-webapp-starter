@@ -11,3 +11,7 @@ exports.secure = function(req, res) {
 	var name = req.params.name;
 	res.render('partials/secure/' + name);
 };
+
+exports.login = function(req, res) {
+	res.render('login');
+};

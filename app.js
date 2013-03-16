@@ -4,10 +4,12 @@
  */
 
 var express = require('express'),
-  routes = require('./routes'),
+  routes = require('./routes/index'),
+  apiroutes = require('./routes/api'),
   orm = require('orm'),
   usersModel = require('./models/users'),
-  config = require('./config/config');
+  config = require('./config/config'),
+  auth = require('./auth/auth'),
   socket = require('./routes/socket.js');
 
 var app = module.exports = express();
@@ -22,6 +24,8 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.bodyParser());
+  app.use(express.cookieParser('webappcookiesYUM'));
+  app.use(express.session());
   app.use(express.methodOverride());
   app.use(express.static(__dirname + '/public'));
   app.use(orm.express(config.dbconn, {
@@ -48,7 +52,32 @@ app.configure('production', function(){
 
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
-app.get('/partials/secure/:name', routes.secure);
+app.get('/partials/secure/:name', auth.restrict, routes.secure);
+app.get('/login', routes.login);
+
+//Api Routes
+
+app.get('/api/getuser', apiroutes.getuser);
+
+app.post('/login', function(req, res) {
+  auth.auth(req.body.username, req.body.password, function(err, user) {
+    if(user) {
+      req.session.regenerate(function() {
+        req.session.user = user.name;
+        res.redirect('back');
+      });
+    } else {
+      res.redirect('back');
+    }
+  });
+});
+
+app.post('/logout', function(req, res) {
+  req.session.destroy(function() {
+  });
+  res.send(200);
+});
+
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
