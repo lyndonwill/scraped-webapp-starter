@@ -60,11 +60,19 @@ app.get('/login', routes.login);
 app.get('/api/getuser', apiroutes.getuser);
 
 app.post('/login', function(req, res) {
-  auth.auth(req.body.username, req.body.password, function(err, user) {
-    if(user) {
-      req.session.regenerate(function() {
-        req.session.user = user.name;
-        res.redirect('back');
+  req.db.models.users.find({username: req.body.username}, 1, function(err, dbuser) {
+    if(err) {res.redirect('back');}
+    if(dbuser[0] != undefined) {
+      dbuser = dbuser[0];
+      auth.auth(req.body.username, req.body.password, dbuser, function(err, user) {
+        if(user) {
+          req.session.regenerate(function() {
+            req.session.user = user;
+            res.redirect('back');
+          });
+        } else {
+          res.redirect('back');
+        }
       });
     } else {
       res.redirect('back');

@@ -1,5 +1,8 @@
 var prompt = require('prompt')
-, hash = require('../auth/hash').hash;
+, hash = require('../auth/hash').hash
+, config = require('../config/config')
+, orm = require('orm')
+, usersModel = require('../models/users');
 
 var inputProperties = [
 {
@@ -26,5 +29,46 @@ prompt.get(inputProperties, function(err, result) {
 		console.log("Passowrd Hash: ");
 		console.log(hash2);
 		console.log("Password Hash length: " + hash2.length);
-	});
+
+		orm.connect(config.dbconn, function(err, db) {
+			if(err) {
+				console.log("Error connecting to Database");
+			}
+			var User = db.define('users', usersModel);
+
+			db.sync(function(err) {
+				if(err) {
+					console.log('Error Synching DB');
+				} else {
+					console.log('DB Sync Completed');
+
+					User.find({username: result.username}, function(err, users) {
+						if(err) {console.log("error finding users");}
+						if(users[0] == undefined) {
+							User.create([
+							{
+								username: result.username,
+								salt: salt2,
+								hash: hash2,
+								usertype: "admin"
+							}
+							], function(err, items) {
+								if(err) {console.log("Error creating user")};
+								console.log("Added to the database");
+								process.exit();
+							});
+						} else {
+							console.log("User already exists");
+							process.exit();
+						}
+					});
+
+					
+				}
+			});
+
+
+});
+
+});
 });

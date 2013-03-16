@@ -1,18 +1,16 @@
 //  Temporary credentials for testing
- 
+var hash = require('./hash').hash;
 
-exports.auth = function(name, pass, fn) {
-	var user = {
-		name: 'admin', 
-		password: 'admin' 
-	};
-	if(name == user.name && pass == user.password) {
-		console.log("User authenticated");
-		return fn(null, user)
-	} else {
-		console.log("User not authenticated");
-		fn(new Error('invalid password'));
-	}
+exports.auth = function(name, pass, dbuser, fn) {
+	hash(pass, dbuser.salt, function(err, pwdhash) {
+		if(err) {throw new Error("Failed hasing");}
+		pwdhash = Buffer(pwdhash, 'binary').toString('base64');
+		if(dbuser.hash == pwdhash) {
+			return fn(null, name);
+		} else {
+			fn(new Error("invalid password"));
+		}
+	});
 };
 
 exports.restrict = function(req, res, next) {
