@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head> 
+    <script src="js/lib/angular/angular.min.js"></script> 
+    <meta charset="utf8">
+    <base href="/">
+    <title>SDM</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+  </head>
+<body>
+    <div ng-controller="AppCtrl">
+      <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">APP Name</a>
+          <div class="nav-collapse collapse" ng-cloak>
+            
+            <ul class="nav">
+              <li><a href="home">Home</a></li>
+              <li><a href="admin">Admin</a></li>
+            </ul>
+
+            <ul class="navbar-text pull-right nav">
+              <li class="dropdown" ng-show="showLogout">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{name}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="" ng-click="logout()">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h1>App Name</h1>
+      <div ng-view></div>
+    </div> 
+    </div>
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/angular-strap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/directives.js"></script>
+  </body>
+  </html>
