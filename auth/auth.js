@@ -8,7 +8,7 @@ exports.auth = function(name, pass, dbuser, fn) {
 		if(dbuser.hash == pwdhash) {
 			return fn(null, name);
 		} else {
-			fn(new Error("invalid password"));
+			fn(err);
 		}
 	});
 };

@@ -1,0 +1,19 @@
+<p> last 20 logins
+<table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>IP</th>
+                  <th>UserAgent</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="userlogin in userlogins">
+                  <td>{{userlogin.id}}</td>
+                  <td>{{userlogin.ip}}</td>
+                  <td>{{userlogin.useragent}}</td>
+                  <td>{{userlogin.date}}</td>
+                </tr>
+              </tbody>
+            </table>

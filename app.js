@@ -3,17 +3,18 @@
  * Module dependencies.
  */
 
-var express = require('express'),
-  routes = require('./routes/index'),
-  apiroutes = require('./routes/api'),
-  orm = require('orm'),
-  usersModel = require('./models/users'),
-  config = require('./config/config'),
-  auth = require('./auth/auth'),
-  socket = require('./routes/socket.js');
+ var express = require('express'),
+ routes = require('./routes/index'),
+ apiroutes = require('./routes/api'),
+ orm = require('orm'),
+ usersModel = require('./models/users'),
+ loginsModel = require('./models/logins'),
+ config = require('./config/config'),
+ auth = require('./auth/auth'),
+ socket = require('./routes/socket.js');
 
-var app = module.exports = express();
-var server = require('http').createServer(app);
+ var app = module.exports = express();
+ var server = require('http').createServer(app);
 
 // Hook Socket.io into Express
 var io = require('socket.io').listen(server);
@@ -30,7 +31,9 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
   app.use(orm.express(config.dbconn, {
     define: function(db) {
-      db.define('users', usersModel);
+      var User = db.define('users', usersModel);
+      var Login = db.define('logins', loginsModel);
+      Login.hasOne('user', User);
       db.sync(function(err) {
         if(err) {console.log("Error synching DB");}
         else {console.log("Db Sync completed");}
@@ -58,9 +61,18 @@ app.get('/login', routes.login);
 //Api Routes
 
 app.get('/api/getuser', apiroutes.getuser);
+app.get('/api/getuserlogins', apiroutes.getuserlogins);
+
+
+//Login Logout Posts
+app.post('/logout', function(req, res) {
+  req.session.destroy(function() {
+  });
+  res.send(200);
+});
 
 app.post('/login', function(req, res) {
-  req.db.models.users.find({username: req.body.username}, 1, function(err, dbuser) {
+  var user = req.db.models.users.find({username: req.body.username}, 1, function(err, dbuser) {
     if(err) {res.redirect('back');}
     if(dbuser[0] != undefined) {
       dbuser = dbuser[0];
@@ -70,21 +82,39 @@ app.post('/login', function(req, res) {
             req.session.user = user;
             res.redirect('back');
           });
+          req.db.models.logins.create([
+          {
+            ip: req.socket.remoteAddress,
+            useragent: req.headers['user-agent'],
+            date: (new Date()),
+            succesful: true,
+            user_id: dbuser.id
+          }
+          ], function(err, items) {
+            if(err) {console.log("Error creating Login");}
+          });
         } else {
           res.redirect('back');
         }
       });
     } else {
       res.redirect('back');
+      req.db.models.logins.create([
+      {
+        ip: req.socket.remoteAddress,
+        useragent: req.headers['user-agent'],
+        date: (new Date()),
+        succesful: false,
+        failinfo: "username: " + req.body.username
+      }
+      ], function(err, items) {
+        if(err) {console.log("Error creating Login");}
+      });
     }
   });
 });
 
-app.post('/logout', function(req, res) {
-  req.session.destroy(function() {
-  });
-  res.send(200);
-});
+
 
 
 // redirect all others to the index (HTML5 history)

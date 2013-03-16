@@ -26,3 +26,12 @@ function AdminCtrl() {
 };
 AdminCtrl.$inject = [];
 
+function UserLoginsCtrl($scope, $http) {
+	$http.get('/api/getuserlogins').success(function(data) {
+		$scope.userlogins = data;
+	}).error(function(data, status, headers, config) {
+		$scope.userlogins = "ERROR";
+	});
+};
+UserLoginsCtrl.$inject = ['$scope', '$http'];
+
