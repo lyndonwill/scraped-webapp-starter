@@ -36,6 +36,11 @@ function UserLoginsCtrl($scope, $http) {
 		if(num == 0) {return "error";}
 		if(num == 1) {return "success";}
 	};
+	$scope.radioVal = function(status) {
+		if(status == "all") {$scope.query2 = "";}
+		if(status == 1) {$scope.query2 = true;}
+		if(status == 2) {$scope.query2 = false;}
+	};
 };
 UserLoginsCtrl.$inject = ['$scope', '$http'];
 

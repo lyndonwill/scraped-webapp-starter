@@ -1,16 +1,22 @@
-<p> last 20 logins
+<div class="pull-right input-append">
+<input type="text" placeholder="Search..." ng-model="query.$">
+  <div class="btn-group" bs-buttons-radio>
+  <button type="button" class="btn active" ng-click="radioVal('all')">All</button>
+  <button type="button" class="btn" ng-click="radioVal(1)">Successful</button>
+  <button type="button" class="btn" ng-click="radioVal(2)">Failed</button>
+  </div>
+</div>
+
 <table class="table table-hover">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>IP</th>
                   <th>UserAgent</th>
                   <th>Date</th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="userlogin in userlogins" class="{{trEval(userlogin.succesful)}}">
-                  <td>{{userlogin.id}}</td>
+                <tr ng-repeat="userlogin in userlogins | filter:query | filter:query2 | orderBy:'-date'" class="{{trEval(userlogin.succesful)}}">
                   <td>{{userlogin.ip}}</td>
                   <td>{{userlogin.useragent}}</td>
                   <td>{{userlogin.date}}</td>
