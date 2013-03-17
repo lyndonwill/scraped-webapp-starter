@@ -32,6 +32,10 @@ function UserLoginsCtrl($scope, $http) {
 	}).error(function(data, status, headers, config) {
 		$scope.userlogins = "ERROR";
 	});
+	$scope.trEval = function(num) {
+		if(num == 0) {return "error";}
+		if(num == 1) {return "success";}
+	};
 };
 UserLoginsCtrl.$inject = ['$scope', '$http'];
 

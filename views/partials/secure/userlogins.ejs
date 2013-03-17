@@ -9,7 +9,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="userlogin in userlogins">
+                <tr ng-repeat="userlogin in userlogins" class="{{trEval(userlogin.succesful)}}">
                   <td>{{userlogin.id}}</td>
                   <td>{{userlogin.ip}}</td>
                   <td>{{userlogin.useragent}}</td>
