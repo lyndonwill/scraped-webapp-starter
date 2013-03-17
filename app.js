@@ -76,7 +76,8 @@ app.post('/login', function(req, res) {
     if(err) {res.redirect('back');}
     if(dbuser[0] != undefined) {
       dbuser = dbuser[0];
-      auth.auth(req.body.username, req.body.password, dbuser, function(err, user) {
+      auth.auth(req.body.username, req.body.password, dbuser, req, function(err, user) {
+        if(err) {console.log("This is break for bad passd");}
         if(user) {
           req.session.regenerate(function() {
             req.session.user = user;
